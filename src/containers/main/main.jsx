@@ -1,28 +1,54 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import Cookies from 'js-cookie'  // 可以操作前端cookie的对象 set()/get()/remove()
+import {Route} from 'react-router-dom'
 
-import {Button, DatePicker} from 'antd'
+import {Layout} from 'antd'
+import './main.css'
+import HeaderCustom from '../../components/header/headerCustom'
 
-import {login} from '../../redux/actions'
-
-
-
-class Main extends Component {
+import {routes} from '../../constants/routes.js'
 
 
-  render() {
-    return (<div>
-        <input type="submit" onClick={() => {this.props.login()}}/>
-        <DatePicker/>
-    </div>)
+const {Content,Footer} = Layout
+class Index extends Component {
+
+  componentWillMount() {
+    document.title = 'GNG blog'
   }
 
+  render() {
+    const contentHeight = document.body.clientHeight// - 64 - 62
+    return (
+      <Layout className="wrapper">
+        <HeaderCustom/>
+        <Layout className="wrapper-container">
+          <Layout className="wrapper-content">
+            <Content style={{padding:24,margin:0,minHeight:contentHeight,height:'100%',overflow:'initial'}}>
+              {
+                routes.map(({path,key,component,...props}) => (
+                  <Route key={key}
+                  exact
+                  path={path}
+                  component={component}
+                  {...props}
+                  />
+                ))
+              }
+              
+            </Content>
+          </Layout>
+          <Footer style={{textAlign: 'center'}}>
+            Copyright © GNG 2019
+          </Footer>
+        </Layout>
+      </Layout>
+    )
+  }
 
 }
 
 export default connect(
   state => ({test:state.test}),
-  {login}
-)(Main)
+  {}
+)(Index)
 // bind on this.props
